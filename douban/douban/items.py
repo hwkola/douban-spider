@@ -15,6 +15,7 @@ class DoubanItem(scrapy.Item):
 
 
 class MoviesItem(scrapy.Item):
+    collection = 'movies'
     id = scrapy.Field()
     title = scrapy.Field()
     directors = scrapy.Field()
@@ -27,6 +28,7 @@ class MoviesItem(scrapy.Item):
     cover = scrapy.Field()
     short_info = scrapy.Field()
     desc = scrapy.Field()
+    crawled_at = scrapy.Field()
 
 
 

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
+import re
+import time
+
 from ..items import MoviesItem
 import scrapy
 
@@ -31,13 +34,17 @@ class MoviesSpider(scrapy.Spider):
         if rest.get('id'):
             movie_item = MoviesItem()
             field_map = {
-                'year': 'year', 'short_info': 'short_info', 'desc': 'desc'
+                'id': 'id', 'year': 'year', 'short_info': 'short_info'
             }
             for f, a in field_map.items():
                 movie_item[f] = rest.get(a)
+            movie_item['year'] = rest.get('extra').get('year')
+            movie_item['short_info'] = rest.get('extra').get('short_info')
+            movie_item['desc'] = re.match('^<[\s\S]*>([\s\S]*)</div>', rest.get('desc')).group(1)    # 清洗desc
             movie_item['rating_count'] = rest.get('extra').get('rating_group').get('rating').get('count')
             movie_item['rating_value'] = rest.get('extra').get('rating_group').get('rating').get('value')
-            movie_item['tags'] = [i['name'] for i in rest.get('tags')]
+            movie_item['tags'] = [i['name'] for i in rest.get('tags')]   # 清洗tags, 只保留名称
+            movie_item['crawled_at'] = time.strftime('%Y-%m-%d %H:%M', time.localtime())    # 添加爬取日期
 
             yield movie_item
 
