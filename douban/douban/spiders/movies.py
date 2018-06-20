@@ -14,14 +14,15 @@ class MoviesSpider(scrapy.Spider):
     range_url = 'https://movie.douban.com/j/new_search_subjects?sort=T&range={0},{1}&tags=&start={2}'
     movie_url = 'https://m.douban.com/rexxar/api/v2/elessar/subject/{mid}'
 
-    w_headers = {
-        "HOST": 'movie.douban.com',
+    headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
     }
 
-    m_headers = {
-        "HOST": 'm.douban.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
+    custom_settings = {
+        # Redis配置
+        'SCHEDULER': 'scrapy_redis.scheduler.Scheduler',
+        'DUPEFILTER_CLASS': 'scrapy_redis.dupefilter.RFPDupeFilter',
+        'SCHEDULER_FLUSH_ON_START': True   # 配置强制结束爬虫后, 销毁爬虫的相关key, 测试方便
     }
 
     def parse_movie(self, response):
@@ -69,12 +70,12 @@ class MoviesSpider(scrapy.Spider):
 
                 # 请求影片M站API
                 mid = i.get('id')
-                yield scrapy.Request(self.movie_url.format(mid=mid), headers=self.m_headers, callback=self.parse_movie)
+                yield scrapy.Request(self.movie_url.format(mid=mid), headers=self.headers, callback=self.parse_movie)
 
         # "加载更多"的请求
         start = response.meta.get('start') + 20
         r = response.meta.get('r')
-        yield scrapy.Request(url=self.range_url.format(r[0], r[1], start), headers=self.w_headers, callback=self.parse,
+        yield scrapy.Request(url=self.range_url.format(r[0], r[1], start), headers=self.headers, callback=self.parse,
                              meta={'r': r, 'start': start})
 
     def start_requests(self):
@@ -84,7 +85,7 @@ class MoviesSpider(scrapy.Spider):
         """
         range_map = ((8, 10), (5, 7), (0, 5))
         for r in range_map:
-            yield scrapy.Request(url=self.range_url.format(r[0], r[1], 0), headers=self.w_headers,
+            yield scrapy.Request(url=self.range_url.format(r[0], r[1], 0), headers=self.headers,
                                  meta={'r': r, 'start': 0})
 
 

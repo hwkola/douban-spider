@@ -1,8 +1,10 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+douban/douban/__pycache__/
+douban/spiders/__pycache__/
 *.py[cod]
 *$py.class
-
+douban/images/
 # C extensions
 *.so
 

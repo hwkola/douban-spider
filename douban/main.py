@@ -5,4 +5,5 @@ import sys
 
 sys.path.append(Path.cwd() / 'spiders')
 
-execute(['scrapy', 'crawl', 'movies'])
+# execute(['scrapy', 'crawl', 'movies'])
+execute(['scrapy', 'crawl', 'books'])

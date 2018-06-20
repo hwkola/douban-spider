@@ -1,4 +1,13 @@
-value = '                     作者:                    [美] 伍绮诗                  出版社: 江苏凤凰文艺出版社              出品方: 读客                        原作名: Little Fires Everywhere                     译者:                                孙璐                  出版年: 2018-4              页数: 400              定价: 52.00元              装帧: 平装              丛书: 读客外国小说文库：伍绮诗作品                          ISBN: 9787559407399'
+import hashlib
+from w3lib.html import remove_tags, replace_escape_chars
+
+
+def get_md5(value):
+    if isinstance(value, str):
+        value = value.encode('utf-8')
+    m = hashlib.md5()
+    m.update(value)
+    return m.hexdigest()
 
 
 def value_to_dict(html):
@@ -7,7 +16,8 @@ def value_to_dict(html):
     :param value:
     :return:
     """
-
+    html = remove_tags(html)
+    html = replace_escape_chars(html)
     html = html.replace(' ', '')
 
     # 将value分出来
@@ -36,10 +46,3 @@ def value_to_dict(html):
             value_dict[aset[0]] = value
 
     return value_dict
-
-
-
-a = value_to_dict(value)
-
-
-print(a)

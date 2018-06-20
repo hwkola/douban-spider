@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'douban.pipelines.MongoPipeline': 300,
+   # 'douban.pipelines.MongoPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -90,17 +90,19 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
+# mongodb
 MONGO_URI = '127.0.0.1'
-
 MONGO_DATABASE = 'douban'
 
 
-SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
-DUPEFILTER_CLASS ='scrapy_redis.dupefilter.RFPDupeFilter'
-
+# redis
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
 
-# 配置强制结束爬虫后, 销毁爬虫的相关key, 测试方便
-SCHEDULER_FLUSH_ON_START = True
+# SPLASH
+SPLASH_URL = 'http://192.168.3.99:8050'
+
+
+# Image download
+IMAGES_STORE = './images'
