@@ -10,10 +10,10 @@ from datetime import datetime
 class BooksSpider(scrapy.Spider):
     name = 'books'
     allowed_domains = ['book.douban.com', 'img3.doubanio.com', 'img1.doubanio.com', 'img2.doubanio.com']
-    start_urls = ['https://book.douban.com/subject/30155720/']
+    start_urls = ['https://book.douban.com/subject/30220058/']
 
     custom_settings = {
-        'DUPEFILTER_CLASS': 'scrapy_splash.SplashAwareDupeFilter',
+        'DUPEFILTER_CLASS': 'douban.common.SplashAwareDupeFilter',
         'DOWNLOADER_MIDDLEWARES': {
             'scrapy_splash.SplashCookiesMiddleware': 723,
             'scrapy_splash.SplashMiddleware': 725,
@@ -28,7 +28,9 @@ class BooksSpider(scrapy.Spider):
         'ITEM_PIPELINES': {
             'douban.pipelines.ImagePipeline': 300,
             'douban.pipelines.MongoPipeline': 302},
-        'IMAGES_STORE': './images/books/'
+        'IMAGES_STORE': './images/books/',
+        'SCHEDULER': 'scrapy_redis.scheduler.Scheduler',
+        'SCHEDULER_FLUSH_ON_START': True  # 配置强制结束爬虫后, 销毁爬虫的相关key, 测试方便
     }
 
     def parse(self, response):
