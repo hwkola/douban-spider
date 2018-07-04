@@ -22,7 +22,7 @@ class MoviesSpider(scrapy.Spider):
         # Redis配置
         'SCHEDULER': 'scrapy_redis.scheduler.Scheduler',
         'DUPEFILTER_CLASS': 'scrapy_redis.dupefilter.RFPDupeFilter',
-        'SCHEDULER_FLUSH_ON_START': True   # 配置强制结束爬虫后, 销毁爬虫的相关key, 测试方便
+        'SCHEDULER_PERSIST': False   # 配置强制结束爬虫后, 销毁爬虫的相关key, 测试方便
     }
 
     def parse_movie(self, response):
